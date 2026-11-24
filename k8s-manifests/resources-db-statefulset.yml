@@ -19,16 +19,37 @@ spec:
           image: postgres:16
           ports:
             - containerPort: 5432
-          env:
-            - name: POSTGRES_USER
-              value: "postgres"
-            - name: POSTGRES_PASSWORD
-              value: "postgres"
-            - name: POSTGRES_DB
-              value: "postgres"
+          envFrom:
+            - configMapRef:
+                name: resources-db-config
+            - secretRef:
+                name: resources-db-secret
           volumeMounts:
             - name: resources-db-storage
               mountPath: /var/lib/postgresql/data
+            - name: resources-db-init-volume
+              mountPath: /docker-entrypoint-initdb.d
+          startupProbe:
+            exec:
+              command: ["pg_isready", "-U", "postgres"]
+            failureThreshold: 30
+            periodSeconds: 2
+          livenessProbe:
+            exec:
+              command: ["pg_isready", "-U", "postgres"]
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 3
+          readinessProbe:
+            exec:
+              command: ["pg_isready", "-U", "postgres"]
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            failureThreshold: 3
+      volumes:
+        - name: resources-db-init-volume
+          configMap:
+            name: resources-db-init
   volumeClaimTemplates:
     - metadata:
         name: resources-db-storage
