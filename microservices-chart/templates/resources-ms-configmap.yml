@@ -1,0 +1,14 @@
+apiVersion: v1
+data:
+  ENABLE_EUREKA_CLIENT: "false"
+  RESOURCES_DB_PORT: "5432"
+  RESOURCES_DB_URL: resources-db
+  SONGS_MS_PORT: "8081"
+  SONGS_MS_URL: songs-ms
+kind: ConfigMap
+metadata:
+  name: resources-ms-config
+  namespace: {{ .Values.namespace }}
+  labels:
+    date: {{ include "microservices-chart.currentDate" . }}
+    version: {{ include "microservices-chart.version" . }}
