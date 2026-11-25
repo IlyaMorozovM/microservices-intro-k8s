@@ -1,0 +1,12 @@
+apiVersion: v1
+data:
+  ENABLE_EUREKA_CLIENT: "false"
+  SONGS_DB_PORT: "5432"
+  SONGS_DB_URL: songs-db
+kind: ConfigMap
+metadata:
+  name: songs-ms-config
+  namespace: {{ .Values.namespace }}
+  labels:
+    date: {{ include "microservices-chart.currentDate" . }}
+    version: {{ include "microservices-chart.version" . }}

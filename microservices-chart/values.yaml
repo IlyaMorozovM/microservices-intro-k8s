@@ -1,0 +1,7 @@
+namespace: k8s-program
+
+resources:
+  replicaCount: 2
+
+songs:
+  replicaCount: 2
